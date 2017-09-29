@@ -100,13 +100,13 @@ intSqrt n
 -- | n > 1 && toInteger (sqrt n * sqrt n) == toInteger n   =  sqrt n
  | otherwise                = intSqrt (n-1)
 
--- TODO:::::::::: 4.21 given a function f of type (Integer -> Integer) and natural numnber n,
+-- 4.21 given a function f of type (Integer -> Integer) and natural numnber n,
 -- returns the max of f from n to 0, using recursion
 returnMaxOfF :: (Integer -> Integer) -> Integer -> Integer
 returnMaxOfF f n
  | n == 0             = f n
  | n == 1             = max (f 1) (f 0)
--- | n > 1              = max (returnMaxOfF f (n-1)) (returnMaxOfF f (n-2))
+ | n > 1              = max (f n) (returnMaxOfF f (n-1))
 
 -- 4.22 given function f and input for f, n, returns True if one or more of the
 -- values from 0 - n, when passed into f, returns 0; False otherwise
