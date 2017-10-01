@@ -107,8 +107,10 @@ elemm n theList
 
 -- 5.22 TODO: check solution. function which takes a list of Strings and returns a single String ,
 -- which when printed, shows the strings on seperate lines
---onSeperateLines :: [String] -> String
---onSeperateLines st = [ str ++ ['\n'] | str <- st]
+onSeperateLines :: [String] -> String
+onSeperateLines st = concat [ str ++ ['\n'] | str <- st]
+
+
 
 -- 5.23 function which takes a String and an Int and returns n copies of the
 -- string as a String
