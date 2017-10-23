@@ -1,7 +1,4 @@
-module Chapter7Exercises
-    (
-    ) where
--- import Test.QuickCheck
+import Data.Tuple
 
 
 -- Chapter 7 exercises
@@ -50,13 +47,83 @@ myOr :: [Bool] -> Bool
 myOr []     = False
 myOr (x:xs) = x || (myOr xs)
 
--- 7.8
+-- a text example that checks if an element is in a list
+myElem :: Integer -> [Integer] -> Bool
+myElem x []     = False
+myElem x (y:ys) = (x == y) || myElem x ys
 
--- 7.9
--- 7.11
+-- 7.8 function that returns the number of times an element occurs in a list
+-- version using primitive recursion
+elemNumRecursive :: Integer -> [Integer] -> Integer
+elemNumRecursive x []     = 0
+elemNumRecursive x (y:ys)
+ | x == y                 = 1 + elemNumRecursive x ys
+ | otherwise              = elemNumRecursive x ys
+
+-- non recursive version
+elemNum :: Integer -> [Integer] -> Integer
+elemNum x l = fromIntegral (length [ el | el <- l, el == x])
+
+
+-- Helper function for 7.9 which removes all of a specified elementx from
+-- a list
+removeElems :: Integer -> [Integer] -> [Integer]
+removeElems x []      = []
+removeElems x (y:ys)
+ | x == y             = removeElems x ys
+ | otherwise          = y : removeElems x ys
+
+-- 7.9 function that returns a list of values that occur only once in a
+-- given list
+-- ex: unique [1,2,3,4,1,2] returns [1,2,3,4]
+unique :: [Integer] -> [Integer]
+uinque []       = []
+unique [x]      = [x]
+unique (x:xs)
+ | myElem x xs  = unique (removeElems x xs)
+ | otherwise    = x : unique xs
+
+-- 7.11 definitions of the prelude function unzip and reverse using primitive
+-- recursion
+myReverse :: [a] -> [a]
+myReverse []      = []
+myReverse (x:xs)  = (myReverse xs) ++ [x]
+
+--myUnzip takes a list of 2-tuples (pairs) and returns a pair of lists
+-- lists. ex myUnzip [(3,'bob'), (5,'ned'), (1,'shirly')] returns ([3,5,1], ['bob','ned','shirly'])
+--myUnzip :: [(a,b)] -> ([a],[b])
+--myUnzip []          = ([],[])
+--myUnzip [x]         = ([fst x],[snd x])
+--myUnzip [x:y:ys]    =
+
 -- 7.13
 -- 7.16
--- 7.18
+-- Helper functions for 7.16
+-- function to insert a given int into a lish of ints. Inserts the given x
+-- element in front of the first element <= x found in the list
+ins :: Integer -> [Integer] -> [Integer]
+ins x []    = [x]
+ins x (y:ys)
+ | x <= y     = x:(y:ys)
+ | otherwise  = y : (ins x ys)
+
+iSort :: [Integer] -> [Integer]
+iSort []          = []
+iSort (x:xs)      = ins x (iSort xs)
+
+-- insert x infront of the first element in the list that is
+-- in descending order
+insAlt :: Integer -> [Integer] -> [Integer]
+insAlt x []    = [x]
+insAlt x (y:ys)
+ | x >= y     = y:(x:ys)
+ | otherwise  = y : (insAlt x ys)
+
+iSort2 :: [Integer] -> [Integer]
+iSort2 []          = []
+iSort2 (x:xs)      = insAlt x (iSort2 xs)
+
+
 -- 7.19
 -- 7.20
 -- 7.21
