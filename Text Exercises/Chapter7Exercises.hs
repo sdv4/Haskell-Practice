@@ -123,8 +123,22 @@ iSort2 :: [Integer] -> [Integer]
 iSort2 []          = []
 iSort2 (x:xs)      = insAlt x (iSort2 xs)
 
+-- 7.19 Using modified versions of ins and iSort functions, this function sorts a
+-- list of pairs of numbers in lexicographic order, by looking first at the first number
+-- and only looking at the second if the first numbers are equal.
+insPair :: (Int,Int) -> [(Int,Int)] -> [(Int,Int)]
+insPair p []      = [p]
+insPair p (y:ys)
+ | (fst p) < (fst y)                        = p : (y:ys)
+ | (fst p) == (fst y) && (snd p < snd y)    = p : (y:ys)
+ | otherwise                                = y : (insPair p ys)
 
--- 7.19
+iSortPair :: [(Int,Int)] -> [(Int,Int)]
+iSortPair []      = []
+iSortPair (x:xs)  = insPair x (iSortPair xs)
+
+
+
 -- 7.20
 -- 7.21
 -- 7.23

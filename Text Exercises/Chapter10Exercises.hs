@@ -1,5 +1,5 @@
 -- Exercises from Chapter 10
-
+import Data.Foldable
 --10.1 Three different doubleAll functions, using: list comprehension, primitive
 -- recursion, and map
 doubleAll1 :: [Int] -> [Int]
@@ -29,6 +29,8 @@ greaterOne n = n > 1
 addOne :: Int -> Int
 addOne n = n + 1
 
+addTen :: Int -> Int
+addTen n = n + 10
 --10.3 given the following funcition:
 -- which adds one to every element of the list and then filters those that are
 -- not greater than one - effectively filtering those <= zero before the map was applied
@@ -115,15 +117,64 @@ iter n f x = f (iter (n-1) f x)
 twoToPowerOfn :: Int -> Int
 twoToPowerOfn n = iter (n-1) double 2
 
---10.13
---10.14
---10.15
---10.16
---10.17
---10.18
---10.19
---10.20
---10.21
+--10.13 function that returns the sum of the squares of the natural numbers from
+-- 1 to n using map and foldr
+sumSquares :: Integer -> Integer
+sumSquares n
+ | n < 1     = error "Function requires that n be a natural number"
+ | otherwise = foldr1 (+) (map square [1..n])
+
+--10.14 function to give the sum of squares of the POSITIVE integers in a list of
+-- integers given as input
+sumSquaresOfPosInList :: [Integer] -> Integer
+sumSquaresOfPosInList [] = error "List cannot be empty"
+sumSquaresOfPosInList xs = foldr1 (+) [square e | e <-xs, e > 0 ]
+
+--10.15 use foldr to give definition of unZip, last, and init (as they operate in Prelude)
+--myLast :: [a] -> a
+--myLast []     = error "List must not be empty"
+--myLast list   = foldr ? [] list
+
+
+--10.16 If xs is a list, mystery concatenates the list into a list on one element
+
+-- function that takes an value of any type and returns a singleton of this element
+sing :: a -> [a]
+sing x = [x]
+
+mystery :: [a] -> [a]
+mystery xs = foldr (++) [] (map sing xs)
+
+--10.18 a function that removes only the first element of the input list that evaluates
+-- to false when passed into input function, where the function checks for some property p
+filterFirst :: (a -> Bool) -> [a] -> [a]
+filterFirst func (x:xs)
+ | func x /= True    = xs
+ | otherwise      = x:(filterFirst func xs)
+
+--10.19 a function that removes the last occurence in a list without property p
+filterLast :: (a -> Bool) -> [a] -> [a]
+filterLast func list = reverse (filterFirst func (reverse list))
+
+--10.20 a function which maps two functions along a list, alternating which to apply
+-- ex: switchMap addOne addTen [1,2,3,4] would return [2,12,4,14]
+switchMap :: (Int -> Int) -> (Int -> Int) -> [Int] -> [Int]
+switchMap f1 f2 []        = []
+switchMap f1 f2 [x]       = f1 x : []
+switchMap f1 f2 (x:xs)
+ | odd (length (x:xs))    = (f1 x) : (switchMap f1 f2 xs)
+ | otherwise              = (f2 x) : (switchMap f1 f2 xs)
+
+--10.21 define
+split :: [a] -> ([a],[a])
+split list = (take split list, drop ((length list)-(split+ rmndr)) list)
+ where
+   split = ((length list) `div` 2)
+   rmndr = ((length list) `rem` 2)
+
+merge :: ([a],[a]) -> [a]
+merge (list1, list2) = list1 ++ list2
+
 --10.24
 --10.25
 --10.26
