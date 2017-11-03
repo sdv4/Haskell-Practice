@@ -16,9 +16,18 @@ total f = (\x -> foldr1 (+) (map f [0..x]))
 switchArgs :: (a -> b -> c) -> (b -> a -> c)
 switchArgs fun = (\f a b -> f b a) fun
 
---11.10
+myMultiply :: Int -> Int -> Int
+myMultiply x y = x*y
+doubleAll :: [Int] -> [Int]
+doubleAll = map (myMultiply 2)
+
 --11.11
---11.12
+--comp2∷
+
+--total2 :: (Integer -> Integer) -> (Integer -> Integer)
+--total2 f = foldr1 (+) . map f [1..n]
+
+--11.12 map (+1) . filter (>(-1))
 
 
 --helpers for following questions - from text pg.248
@@ -37,8 +46,6 @@ iter n f
 --adds one to the input value n times
 
 --11.21 alternate and constructive definition of iter which creates the list of
--- n copies of f TODO: incomplete
---constIter :: Integer -> (a -> a) -> [(a -> a)]
---constIter n f
--- | n > 0             = f : constIter (n - 1) f
--- | otherwise         = id
+-- n copies of f
+constIter :: Int -> (a -> a) -> (a -> a)
+constIter n f        = foldr1 (.) (replicate n f)

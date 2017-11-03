@@ -50,6 +50,56 @@ xIntercept (0,b) = error "slope can not be 0"
 xIntercept (m,b) = (fromIntegral (-b))/(fromIntegral m)
 
 
+
+-- 5.5 and 5.7, 5.8, 5.10 function to give the length of the peremiter of a geometrical shape of
+-- type Shape.
+data Shape = Circle Float | Rectangle Float Float | Triangle Float Float Float
+              deriving (Eq,Ord,Show)
+
+equalShapes :: Shape -> Shape -> Bool
+equalShapes (Circle r) (Circle r2)              = (r == r2 || (r < 0 && r2 < 0))
+equalShapes (Rectangle l w) (Rectangle l2 w2)   = (l == l2 && w == w2) || (l == w2 && w == l2)
+equalShapes _ _                                 = False
+
+
+perimeter :: Shape -> Float
+perimeter (Circle r)            = 2*pi*r          -- i.e. the circumference
+perimeter (Rectangle l w)        = 2*(l+w)
+perimeter (Triangle s1 s2 s3)   = s1 + s2 + s3
+
+area :: Shape -> Float
+area (Circle r)           = pi*r*r
+area (Rectangle l w)       = l*w
+area (Triangle s1 s2 s3)  = sqrt(s*(s-s1)*(s-s2)*(s-s3))
+  where s = (s1+s2+s3)/2                                                -- semi perimeter of a triangle
+
+isRound :: Shape -> Bool
+isRound (Circle _)        = True
+isRound (Rectangle _ _)    = False
+isRound (Triangle _ _ _)  = False
+
+isRegular :: Shape -> Bool
+isRegular (Circle _)          = True
+isRegular (Rectangle l w)     = l == w
+isRegular (Triangle s1 s2 s3) = (s1 == s2) && (s2 == s3)
+
+--5.11 and 5.12 -- tuple is the x,y coords of the centre each shape
+data NewShape = NewCircle Float (Float,Float)| NewRectangle Float Float (Float,Float) | NewTriangle Float Float Float (Float,Float)
+              deriving (Eq,Ord,Show)
+
+move :: Float -> Float -> NewShape -> NewShape
+move x y (NewCircle r c)               = NewCircle r (x,y)
+move x y (NewRectangle l w c)          = NewRectangle l w (x,y)
+move x y (NewTriangle s1 s2 s3 c)      = NewTriangle s1 s2 s3 (x,y)
+
+--5.14
+data Addr = StringAddress String | NumberAddress Int
+              deriving (Eq,Ord,Show)
+
+
+
+
+
 -- 5.15 the expression [0, 0.1 .. 1] evaluates to [0.0,0.1,0.2,
 -- 0.30000000000000004,0.4000000000000001,0.5000000000000001,0.6000000000000001,
 -- 0.7000000000000001,0.8,0.9,1.0]. I thought it would evaluate to:
